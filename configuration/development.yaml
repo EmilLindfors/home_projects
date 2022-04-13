@@ -1,0 +1,11 @@
+server:
+  port: 8000
+  host: 0.0.0.0
+database:
+  db_type: "sqlite"
+  db_name: "sqlite:data.db"
+  host: "localhost"
+  port: 5432
+  username: "postgres"
+  password: "Limeapelsin1"
+  require_ssl: false
