@@ -6,6 +6,6 @@ database:
   db_name: "sqlite:data.db"
   host: "localhost"
   port: 5432
-  username: "postgres"
-  password: "Limeapelsin1"
+  username: ""
+  password: ""
   require_ssl: false
