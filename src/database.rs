@@ -1,4 +1,4 @@
-use entity::{project, task};
+use entity::{project, task, user};
 use sea_orm::{ConnectionTrait, Database, DatabaseConnection, DbErr, Schema};
 use crate::settings::Settings;
 
@@ -12,19 +12,21 @@ pub async fn get_db_connection(settings: &Settings) -> Result<DatabaseConnection
     Ok(db)
 }
 
-pub async fn create_tables(db: DatabaseConnection) -> Result<(), DbErr> {
+pub async fn create_tables(db: &DatabaseConnection) -> Result<(), DbErr> {
 
-    let postgres = db.get_database_backend();
-    let schema = Schema::new(postgres);
+    let database_type = db.get_database_backend();
+    let schema = Schema::new(database_type);
 
     //create tables from entities
     //db.execute(
-    //    postgres.build(&schema.create_enum_from_active_enum::<category::active_enum::Category>()),
+    //    database_type.build(&schema.create_enum_from_active_enum::<category::active_enum::Category>()),
     //)
     //.await?;
-    db.execute(postgres.build(&schema.create_table_from_entity(project::Entity)))
+    db.execute(database_type.build(&schema.create_table_from_entity(project::Entity)))
         .await?;
-    db.execute(postgres.build(&schema.create_table_from_entity(task::Entity)))
+    db.execute(database_type.build(&schema.create_table_from_entity(task::Entity)))
+        .await?;
+        db.execute(database_type.build(&schema.create_table_from_entity(user::Entity)))
         .await?;
 
     Ok(())

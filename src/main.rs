@@ -5,6 +5,7 @@ use home_projects::{
     telemetry::{get_subscriber, init_subscriber},
 };
 use std::env;
+use home_projects::database::create_tables;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -14,7 +15,7 @@ async fn main() -> anyhow::Result<()> {
     env::set_var("RUST_LOG", "debug");
     let settings = Settings::new()?;
     let db = get_db_connection(&settings).await?;
-    //create_tables(settings).await?;
+    create_tables(&db).await?;
 
 
     //let project = project::ActiveModel {

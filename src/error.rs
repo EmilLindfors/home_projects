@@ -12,7 +12,7 @@ use serde_json::json;
 pub type Result<T> = std::result::Result<T, Error>;
 
 /// The error type returned from the Svix API
-#[derive(thiserror::Error, Debug, Clone)]
+#[derive(thiserror::Error, Debug)]
 pub enum Error {
     /// A generic error
     Generic(String),
@@ -24,6 +24,7 @@ pub enum Error {
     Validation(String),
     /// Any kind of HttpError
     Http(HttpError),
+    Anyhow(#[from] anyhow::Error),
 }
 
 impl fmt::Display for Error {
@@ -34,6 +35,7 @@ impl fmt::Display for Error {
             Error::Queue(s) => s.fmt(f),
             Error::Validation(s) => s.fmt(f),
             Error::Http(s) => s.fmt(f),
+            Error::Anyhow(s) => s.fmt(f),
         }
     }
 }

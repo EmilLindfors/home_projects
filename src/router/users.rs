@@ -10,6 +10,7 @@ use entity::user;
 use sea_orm::{prelude::Uuid, ActiveModelTrait, ActiveValue, EntityTrait};
 use serde::{Deserialize, Serialize};
 use argon2::{Argon2, PasswordHash, password_hash::SaltString};
+use anyhow::Context;
 
 async fn get_user(ref ctx: Extension<Server>, Path(id): Path<Uuid>) -> Result<Json<user::Model>> {
     Ok(Json(
@@ -58,11 +59,12 @@ async fn create_user(
     ref ctx: Extension<Server>,
     Json(req): Json<CreateUserRequest>,
 ) -> Result<StatusCode> {
+    let pass = hash_password(req.password).await?;
     user::ActiveModel {
         username: ActiveValue::Set(req.username.to_owned()),
         email: ActiveValue::Set(req.email.to_owned()),
         //todo fix argon2 hashing
-        password_hash: ActiveValue::Set(hash_password(req.password.to_owned())),
+        password_hash: ActiveValue::Set(pass),
         ..Default::default()
     }
     .save(&ctx.db)
