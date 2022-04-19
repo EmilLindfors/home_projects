@@ -15,7 +15,7 @@ async fn main() -> anyhow::Result<()> {
     env::set_var("RUST_LOG", "debug");
     let settings = Settings::new()?;
     let db = get_db_connection(&settings).await?;
-    create_tables(&db).await?;
+    //create_tables(&db).await?;
 
 
     //let project = project::ActiveModel {

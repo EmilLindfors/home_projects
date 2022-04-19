@@ -14,6 +14,7 @@ pub struct Model {
     pub text: String,
     pub created_at: DateTimeWithTimeZone,
     pub updated_at: DateTimeWithTimeZone,
+    pub user_id: Option<String>
 }
 
 #[derive(Copy, Clone, Debug, EnumIter)]
@@ -26,7 +27,10 @@ impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
             Self::Task => Entity::has_many(super::task::Entity).into(),
-            Self::User => Entity::has_many(super::user::Entity).into(),
+            Self::User => Entity::belongs_to(super::user::Entity)
+            .from(Column::UserId)
+            .to(super::user::Column::UserId)
+            .into(),
         }
     }
 }
@@ -42,6 +46,8 @@ impl Related<super::user::Entity> for Entity {
         Relation::User.def()
     }
 }
+
+
 
 impl ActiveModelBehavior for ActiveModel {
     fn new() -> Self {

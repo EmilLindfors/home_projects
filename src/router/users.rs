@@ -65,9 +65,10 @@ async fn create_user(
         email: ActiveValue::Set(req.email.to_owned()),
         //todo fix argon2 hashing
         password_hash: ActiveValue::Set(pass),
+        bio: ActiveValue::Set("".to_owned()),
         ..Default::default()
     }
-    .save(&ctx.db)
+    .insert(&ctx.db)
     .await
     .map_err(|e| HttpError::bad_request(Some(e.to_string()), None))?;
 
